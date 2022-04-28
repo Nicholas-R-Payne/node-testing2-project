@@ -116,4 +116,20 @@ describe('HTTP API test', () => {
         result = await Pokemon.getAll();
         expect(result).toHaveLength(3);
     });
+
+    test('PUT /pokemon/:id', async () => {
+        let res = await request(server).put('/pokemon/3').send({ name: 'Psyduck' });
+        expect(res.status).toBe(200);
+        expect(res.body).toMatchObject({ id: 3, name: 'Psyduck' });
+
+        let result = await Pokemon.getById(3);
+        expect(result).toHaveProperty('name', 'Psyduck');
+
+        result = await Pokemon.getAll();
+        expect(result).toHaveLength(4);
+
+        res = await request(server).put('/pokemon/300').send({ name: 'Psyduck' });
+        expect(res.status).toBe(404);
+        expect(res.body).toHaveProperty('message', 'Pokemon not found');
+    });
 })
