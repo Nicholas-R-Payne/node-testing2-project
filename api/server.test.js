@@ -36,4 +36,20 @@ describe('database tests', () => {
         expect(result.length).toBe(4);
         expect(result[1]).toMatchObject({ name: 'Charmander' });
     });
+
+    test('insert', async () => {
+        let result = await Pokemon.insert({ name: 'Eevee' });
+        expect(result).toHaveProperty('name', 'Eevee');
+        expect(result.id).toBe(5);
+        result = await Pokemon.getAll();
+        expect(result.length).toBe(5);
+    });
+
+    test('getById', async () => {
+        let result = await Pokemon.getById(0);
+        expect(result).not.toBeDefined();
+        result = await Pokemon.getById(1);
+        expect(result).toBeDefined();
+        expect(result.name).toBe('Bulbasaur');
+    });
 })
