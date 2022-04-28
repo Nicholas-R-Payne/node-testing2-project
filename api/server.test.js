@@ -75,4 +75,45 @@ describe('HTTP API test', () => {
         expect(res.status).toBe(200);
         expect(res.body).toHaveLength(4);
     });
+
+    test('GET /Pokemon/:id', async () => {
+        let res = await request(server).get('/pokemon/1');
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({ id: 1, name: 'Bulbasaur' });
+
+        res = await request(server).get('/pokemon/100');
+        expect(res.status).toBe(404);
+        expect(res.body).toHaveProperty('message', 'Pokemon not found');
+    });
+
+    test('POST /pokemon', async () => {
+        let res = await request(server).post('/pokemon').send({ name: 'Pidgey' });
+        expect(res.status).toBe(201);
+        expect(res.body).toMatchObject({ id: 5, name: 'Pidgey' });
+
+        let result = await Pokemon.getAll();
+        expect(result).toHaveLength(5);
+
+        res = await request(server).post('/pokemon').send({});
+        expect(res.status).toBe(500);
+
+        result = await Pokemon.getAll();
+        expect(result).toHaveLength(5);
+    });
+
+    test('DELETE /pokemon/:id', async () => {
+        let res = await request(server).delete('/pokemon/2');
+        expect(res.status).toBe(200);
+        expect(res.body).toMatchObject({ id: 2, name: 'Charmander' });
+
+        let result = await Pokemon.getAll();
+        expect(result).toHaveLength(3);
+
+        res = await request(server).delete('/pokemon/2');
+        expect(res.status).toBe(404);
+        expect(res.body).toHaveProperty('message', 'Pokemon not found');
+
+        result = await Pokemon.getAll();
+        expect(result).toHaveLength(3);
+    });
 })
