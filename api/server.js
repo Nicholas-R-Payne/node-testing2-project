@@ -1,5 +1,7 @@
 const express = require("express");
 
+const Pokemon = require()
+
 const server = express();
 
 server.use(express.json());
