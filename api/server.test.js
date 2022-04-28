@@ -68,3 +68,11 @@ describe('database tests', () => {
         expect(result[1].id).toBe(3);
     });
 })
+
+describe('HTTP API test', () => {
+    test('GET /pokemon', async () => {
+        const res = await request(server).get('/pokemon');
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveLength(4);
+    });
+})
