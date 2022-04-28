@@ -52,4 +52,19 @@ describe('database tests', () => {
         expect(result).toBeDefined();
         expect(result.name).toBe('Bulbasaur');
     });
+
+    test('update', async () => {
+        let result = await Pokemon.update(4, { name: 'Meowth' });
+        expect(result).toEqual({ id: 4, name: 'Meowth' });
+        result = await Pokemon.getAll();
+        expect(result).toHaveLength(4);
+    });
+
+    test('remove', async () => {
+        let result = await Pokemon.remove(1);
+        expect(result).toHaveProperty('name', 'Bulbasaur');
+        result = await Pokemon.getAll();
+        expect(result).toHaveLength(3);
+        expect(result[1].id).toBe(3);
+    });
 })
